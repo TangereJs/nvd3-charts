@@ -13,12 +13,49 @@
   NVD3.ChartBehaviorImpl = {
     properties: {
       /*
-       * Data
+       * Value
        */
-      data: {
+      value: {
         type: Array,
         value: [],
-        observer: '_dataChanged'
+        observer: '_valueChanged',
+        schema: {
+          items: {
+            properties: {
+              key: {
+                type: "string",
+                title: "Key",
+                value: ""
+              },
+              color: {
+                type: "string",
+                title: "Color",
+                value: "#000000"
+              },
+              values: {
+                type: "array",
+                title: "Values",
+                value: function () {
+                  return [];
+                },
+                schema: {
+                  items: {
+                    properties: {
+                      x: {
+                        type: "number",
+                        title: "x"
+                      },
+                      y: {
+                        type: "number",
+                        title: "y"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       },
 
       /*
@@ -45,7 +82,7 @@
       },
 
       /**
-       * Colors to use for the different data.
+       * Colors to use for the different value.
        * If an array is given, it is converted to a function automatically.
        */
       color: {
@@ -79,9 +116,9 @@
       },
 
       /**
-       * Message to display if no data is provided.
+       * Message to display if no value is provided.
        */
-      noData: {
+      noValue: {
         type: String
       },
 
@@ -137,7 +174,7 @@
     observers: [
       '_setColor(color.length)',
       '_setMargin(margin.top, margin.right, margin.bottom, margin.left)',
-      '_setNoData(noData)',
+      '_setNoValue(noValue)',
       '_setWidth(width)',
       '_setHeight(height)',
       '_setShowLabels(showLabels)',
@@ -214,10 +251,10 @@
     },
 
     /**
-     * Observer for setting text of no data.
+     * Observer for setting text of no value.
      */
-    _setNoData: function(noData) {
-      this._chart.noData(noData);
+    _setNoValue: function(noValue) {
+      this._chart.noData(noValue);
     },
 
     /**
@@ -265,11 +302,11 @@
     },
 
     /**
-     * Observer for data changed
+     * Observer for value changed
      */
-    _dataChanged: function () {
+    _valueChanged: function () {
       if (this._chart) {
-        d3.select(this.svg).datum(this.data);
+        d3.select(this.svg).datum(this.value);
         this.refresh();
       }
     },
@@ -288,14 +325,14 @@
      */
     generateChart: function() {
       var chart = this._chart;
-      var data = this.data;
+      var value = this.value;
       var svg = this.svg;
       var autoResize = this.autoResize;
       var that = this;
 
       nv.addGraph(function() {
         d3.select(svg)
-          .datum(data)
+          .datum(value)
           .call(chart);
 
         if (that.flexSize) {
