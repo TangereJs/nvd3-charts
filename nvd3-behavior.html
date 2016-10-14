@@ -20,43 +20,7 @@
         value: [],
         observer: '_valueChanged',
         xgridcols: "12",
-        schema: {
-          items: {
-            properties: {
-              key: {
-                type: "string",
-                title: "Key",
-                value: ""
-              },
-              color: {
-                type: "string",
-                title: "Color",
-                value: "#000000"
-              },
-              values: {
-                type: "array",
-                title: "Values",
-                value: function () {
-                  return [];
-                },
-                schema: {
-                  items: {
-                    properties: {
-                      x: {
-                        type: "number",
-                        title: "x"
-                      },
-                      y: {
-                        type: "number",
-                        title: "y"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+        xtype: "json"
       },
 
       /*
@@ -305,7 +269,21 @@
     /**
      * Observer for value changed
      */
-    _valueChanged: function () {
+    _valueChanged: function (newValue, oldValue) {
+      function isString(obj) {
+        return Object.prototype.toString.call(obj) === "[object String]";
+      }
+
+      if (isString(newValue)) {
+        try {
+          var parsedValue = JSON.parse(newValue);
+          this.value = parsedValue;
+        } catch(e) {
+
+        }
+        return;
+      }
+
       if (this._chart) {
         d3.select(this.svg).datum(this.value);
         this.refresh();
