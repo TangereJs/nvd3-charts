@@ -39,7 +39,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var myEl,
         selectEl = document.querySelector('#nvd3-pie-select');
 
-      selectEl.data = [{
+      selectEl.value = [{
         "label": "One",
         "value": 29
       }];
@@ -99,9 +99,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       test('Event slice-selected is fired when slice is clicked', function() {
         selectEl.addEventListener('slice-selected', function(e) {
-          assert.isTrue(selectEl.data.indexOf(e.detail) > -1);
+          assert.isTrue(selectEl.value.indexOf(e.detail) > -1);
         });
-        MockInteractions.tap(selectEl.querySelector('g.nv-slice'));
+        var gNvSlice = selectEl.querySelector('g.nv-slice');        
+        MockInteractions.tap(gNvSlice);
       });
     });
   </script>
